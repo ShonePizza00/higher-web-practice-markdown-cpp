@@ -1,3 +1,3 @@
 set -e
-./build.sh
-./run.sh
+sh build.sh
+sh run.sh
