@@ -5,15 +5,20 @@ std::string EscapeHtml(const std::string &text) {
 	result.reserve(text.size());
 	for (char c: text) {
 		switch (c) {
-			case '&': result += "&amp;";
+			case '&':
+				result += "&amp;";
 				break;
-			case '<': result += "&lt;";
+			case '<':
+				result += "&lt;";
 				break;
-			case '>': result += "&gt;";
+			case '>':
+				result += "&gt;";
 				break;
-			case '"': result += "&quot;";
+			case '"':
+				result += "&quot;";
 				break;
-			default: result += c;
+			default:
+				result += c;
 		}
 	}
 	return result;
@@ -33,13 +38,19 @@ bool IsValidUtf8(const std::string &text) {
 				                             : first >= 0xf0 && first <= 0xf4
 					                               ? 4
 					                               : 0;
-		if (length == 0 || i + length > text.size()) return false;
+		if (length == 0 || i + length > text.size()) {
+			return false;
+		}
 		for (std::size_t j = 1; j < length; ++j) {
 			const auto next = static_cast<unsigned char>(text[i + j]);
-			if ((next & 0xc0) != 0x80 || (j == 1 &&
-			                              ((first == 0xe0 && next < 0xa0) || (first == 0xed && next >= 0xa0) ||
-			                               (first == 0xf0 && next < 0x90) || (first == 0xf4 && next >= 0x90))))
+			if ((next & 0xc0) != 0x80 ||
+				(j == 1 && (
+					(first == 0xe0 && next < 0xa0) ||
+					(first == 0xed && next >= 0xa0) ||
+					(first == 0xf0 && next < 0x90) ||
+					(first == 0xf4 && next >= 0x90)))) {
 				return false;
+			}
 		}
 		i += length;
 	}

@@ -9,16 +9,22 @@ namespace {
 
 	bool IsEscaped(const std::string &text, std::size_t pos) {
 		std::size_t slashes = 0;
-		while (pos > slashes && text[pos - slashes - 1] == '\\') ++slashes;
+		while (pos > slashes && text[pos - slashes - 1] == '\\') {
+			++slashes;
+		}
 		return slashes % 2 != 0;
 	}
 
 	std::size_t FindClosing(const std::string &text, const std::string &marker, std::size_t from) {
 		for (std::size_t i = from; i + marker.size() <= text.size(); ++i) {
-			if (text.compare(i, marker.size(), marker) == 0 && !IsEscaped(text, i) &&
-			    (marker != "*" || ((i == 0 || text[i - 1] != '*') &&
-			                       (i + 1 == text.size() || text[i + 1] != '*'))))
+			if (text.compare(i, marker.size(), marker) == 0 &&
+				!IsEscaped(text, i) &&
+			    (marker != "*" || (
+				    (i == 0 || text[i - 1] != '*') &&
+				    (i + 1 == text.size() || text[i + 1] != '*'))))
+			{
 				return i;
+			}
 		}
 		return std::string::npos;
 	}
@@ -59,9 +65,10 @@ namespace {
 				auto end = FindClosing(text, marker, i + marker.size());
 				if (end != std::string::npos && end > i + marker.size()) {
 					const auto tag = marker == "**" ? "strong" : "em";
-					out += "<" + std::string(tag) + ">" + Parse(text.substr(i + marker.size(), end - i - marker.size()))
-							+
-							"</" + tag + ">";
+					out +=
+						"<" + std::string(tag) + ">" +
+					    Parse(text.substr(i + marker.size(), end - i - marker.size())) +
+						"</" + tag + ">";
 					i = end + marker.size();
 					continue;
 				}

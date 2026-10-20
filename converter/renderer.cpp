@@ -13,7 +13,9 @@ std::string RenderHtml(const std::vector<Block> &blocks) {
 			case Block::Type::Paragraph: {
 				std::string text;
 				for (const auto &line: block.lines) {
-					if (!text.empty()) text += ' ';
+					if (!text.empty()) {
+						text += ' ';
+					}
 					text += line;
 				}
 				html += "<p>" + ParseInline(text) + "</p>\n";
@@ -24,7 +26,9 @@ std::string RenderHtml(const std::vector<Block> &blocks) {
 				const bool ordered = block.type == Block::Type::OrderedList;
 				const std::string tag = ordered ? "ol" : "ul";
 				html += "<" + tag + ">\n";
-				for (const auto &line: block.lines) html += "  <li>" + ParseInline(line) + "</li>\n";
+				for (const auto &line: block.lines) {
+					html += "  <li>" + ParseInline(line) + "</li>\n";
+				}
 				html += "</" + tag + ">\n";
 				break;
 			}
